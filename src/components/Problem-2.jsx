@@ -14,7 +14,7 @@ const Problem2 = () => {
       let apiUrl;
 
       if (searchQuery !== "") {
-        apiUrl=`https://contact.mediusware.com/api/country-contacts/${searchQuery}/?page=${page}&page_size=10`;
+        apiUrl = `https://contact.mediusware.com/api/country-contacts/${searchQuery}/?page=${page}&page_size=10`;
       } else if (countryNameParams !== "") {
         apiUrl = `https://contact.mediusware.com/api/country-contacts/${countryNameParams}/?page=${page}&page_size=10`;
       } else {
@@ -32,6 +32,7 @@ const Problem2 = () => {
   };
 
   const handleModalOpen = (type) => {
+    setSearchQuery("");
     setModalType(type);
     setShowModal(true);
     setCurrentPage(1);
@@ -76,13 +77,15 @@ const Problem2 = () => {
         currentPage
       );
     }
-  }, [currentPage, showModal]);
+  }, [currentPage, showModal, onlyEven]);
+
+  const filteredContacts = onlyEven
+    ? contacts.filter((contact) => contact.id % 2 === 0)
+    : contacts;
 
   return (
     <div className="container">
       <div className="row justify-content-center mt-5">
-        <h4 className="text-center text-uppercase mb-5">Problem-2</h4>
-
         <div className="d-flex justify-content-center gap-3">
           <button
             className="btn btn-lg btn-outline-primary"
@@ -92,7 +95,7 @@ const Problem2 = () => {
             All Contacts
           </button>
           <button
-            className="btn btn-lg btn-outline-warning"
+            className="btn btn-lg btn-outline-warning mx-4"
             type="button"
             onClick={() => handleModalOpen("US Contacts")}
           >
@@ -106,9 +109,13 @@ const Problem2 = () => {
           className="modal fade show"
           tabIndex="-1"
           role="dialog"
-          style={{ display: "block", overflow: "scroll" }}
+          style={{ display: "block", height: "100vh" }}
         >
-          <div className="modal-dialog" role="document">
+          <div
+            style={{ overflow: "scroll", height: "100vh" }}
+            className="modal-dialog"
+            role="document"
+          >
             <div className="modal-content">
               <div className="modal-header">
                 <h3 className="modal-title">{modalType}</h3>
@@ -125,7 +132,7 @@ const Problem2 = () => {
                   {modalType !== "US Contacts" && (
                     <div>
                       <input
-                      className="w-100 input p-2"
+                        className="w-100 input p-2"
                         type="text"
                         value={searchQuery}
                         onChange={handleSearchInputChange}
@@ -149,17 +156,18 @@ const Problem2 = () => {
                     />
                   </label>
                 </div>
-                {contacts.length > 0 && (
+
+                {filteredContacts.length > 0 && (
                   <table className="table">
                     <thead>
                       <tr>
-                        <th scope="col">Name</th>
+                        <th scope="col">ID</th>
                         <th scope="col">Country</th>
                         <th scope="col">Phone</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {contacts.map((contact, index) => (
+                      {filteredContacts.map((contact, index) => (
                         <tr
                           key={index}
                           onClick={() => handleContactClick(contact)}
@@ -177,7 +185,11 @@ const Problem2 = () => {
                 <button className="btn btn-success" onClick={handleLoadMore}>
                   Load More
                 </button>
-                <button className="btn btn-danger" onClick={handleModalClose}>
+
+                <button
+                  className="btn btn-danger mx-2"
+                  onClick={handleModalClose}
+                >
                   Close
                 </button>
               </div>
