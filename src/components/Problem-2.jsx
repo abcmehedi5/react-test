@@ -14,11 +14,11 @@ const Problem2 = () => {
       let apiUrl;
 
       if (searchQuery !== "") {
-        apiUrl`https://contact.mediusware.com/api/country-contacts/${searchQuery}/?page=${page}&page_size=20`;
+        apiUrl=`https://contact.mediusware.com/api/country-contacts/${searchQuery}/?page=${page}&page_size=10`;
       } else if (countryNameParams !== "") {
-        apiUrl = `https://contact.mediusware.com/api/country-contacts/${countryNameParams}/?page=${page}&page_size=20`;
+        apiUrl = `https://contact.mediusware.com/api/country-contacts/${countryNameParams}/?page=${page}&page_size=10`;
       } else {
-        apiUrl = `https://contact.mediusware.com/api/contacts/?page=${page}&page_size=20`;
+        apiUrl = `https://contact.mediusware.com/api/contacts/?page=${page}&page_size=10`;
       }
 
       const response = await fetch(apiUrl);
@@ -125,13 +125,14 @@ const Problem2 = () => {
                   {modalType !== "US Contacts" && (
                     <div>
                       <input
+                      className="w-100 input p-2"
                         type="text"
                         value={searchQuery}
                         onChange={handleSearchInputChange}
                         placeholder="Search..."
                       />
                       <button
-                        className="btn btn-primary"
+                        className="btn btn-primary w-100 mt-3 mb-4"
                         onClick={handleSearch}
                       >
                         Search
@@ -148,20 +149,31 @@ const Problem2 = () => {
                     />
                   </label>
                 </div>
-                <ul>
-                  {contacts.map((contact, Index) => (
-                    <li
-                      key={Index}
-                      onClick={() => handleContactClick(contact)}
-                      className="cursor-pointer"
-                    >
-                      {contact.country.name}
-                      <p>{contact.country.id}</p>
-                    </li>
-                  ))}
-                </ul>
+                {contacts.length > 0 && (
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Country</th>
+                        <th scope="col">Phone</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {contacts.map((contact, index) => (
+                        <tr
+                          key={index}
+                          onClick={() => handleContactClick(contact)}
+                          className="cursor-pointer"
+                        >
+                          <td>{contact.id}</td>
+                          <td>{contact.country.name}</td>
+                          <td>{contact.phone}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
 
-                
                 <button className="btn btn-success" onClick={handleLoadMore}>
                   Load More
                 </button>
