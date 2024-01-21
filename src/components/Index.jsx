@@ -10,7 +10,7 @@ export default function Index() {
                         <li className="nav-item">
                             <NavLink to='/problem-1' className="nav-link active">Problem - 1</NavLink>
                         </li>
-                        <li className="nav-item">
+                        <li className="nav-item mt-3">
                             <NavLink to='/problem-2' className="nav-link active">Problem - 2</NavLink>
                         </li>
                     </ul>
